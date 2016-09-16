@@ -30,7 +30,7 @@ class TestParseDataverse(TestCase):
 
     def test_mapping(self):
         mapping = parse_dataverse.get_db_objects(self.mets, self.uuid)
-        assert len(mapping) == 8
+        assert len(mapping) == 7
         # chelen_052.jpg
         assert self.mets.get_file('2bd13f12-cd98-450d-8c49-416e9f666a9c') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/chelan_052.jpg') in mapping.values()
@@ -46,9 +46,6 @@ class TestParseDataverse(TestCase):
         # ris
         assert self.mets.get_file('e9e0d762-feff-4b9c-9f70-b408c47149bc') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_datacitation-ris.ris') in mapping.values()
-        # dataset.json
-        assert self.mets.get_file('20716608-2069-4bea-ace2-b3e81c2725e9') in mapping
-        assert models.File.objects.get(currentlocation='%transferDirectory%objects/dataset.json') in mapping.values()
         # ddi
         assert self.mets.get_file('3dfc2e3f-22e2-4d3e-9913-e4bccc5257ff') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data-ddi.xml') in mapping.values()
@@ -71,7 +68,6 @@ class TestParseDataverse(TestCase):
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.RData').filegrpuse == 'derivative'
         # Metadata
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_datacitation-ris.ris').filegrpuse == 'metadata'
-        assert models.File.objects.get(currentlocation='%transferDirectory%objects/dataset.json').filegrpuse == 'metadata'
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data-ddi.xml').filegrpuse == 'metadata'
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_datacitation-endnote.xml').filegrpuse == 'metadata'
 
