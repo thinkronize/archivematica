@@ -30,7 +30,7 @@ class TestParseDataverse(TestCase):
 
     def test_mapping(self):
         mapping = parse_dataverse.get_db_objects(self.mets, self.uuid)
-        assert len(mapping) == 7
+        assert len(mapping) == 6  # FIXME set to 7 when .RData in METS
         # chelen_052.jpg
         assert self.mets.get_file('2bd13f12-cd98-450d-8c49-416e9f666a9c') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/chelan_052.jpg') in mapping.values()
@@ -41,8 +41,9 @@ class TestParseDataverse(TestCase):
         assert self.mets.get_file('e5fde5cb-a5d7-4e67-ae66-20b73552eedf') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.tab') in mapping.values()
         # Weather_data.RData
-        assert self.mets.get_file('a001048d-4c3e-485d-af02-1d19584a93b1') in mapping
-        assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.RData') in mapping.values()
+        # FIXME uncomment when .RData in METS
+        # assert self.mets.get_file('a001048d-4c3e-485d-af02-1d19584a93b1') in mapping
+        # assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.RData') in mapping.values()
         # ris
         assert self.mets.get_file('e9e0d762-feff-4b9c-9f70-b408c47149bc') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_datacitation-ris.ris') in mapping.values()
@@ -65,7 +66,8 @@ class TestParseDataverse(TestCase):
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.sav').filegrpuse == 'original'
         # Derivative
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.tab').filegrpuse == 'derivative'
-        assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.RData').filegrpuse == 'derivative'
+        # FIXME uncomment when .RData in METS
+        # assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.RData').filegrpuse == 'derivative'
         # Metadata
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_datacitation-ris.ris').filegrpuse == 'metadata'
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data-ddi.xml').filegrpuse == 'metadata'
@@ -122,9 +124,10 @@ class TestParseDataverse(TestCase):
         mapping = parse_dataverse.get_db_objects(self.mets, self.uuid)
         agent = parse_dataverse.add_external_agents(self.unit_path)
         parse_dataverse.create_derivatives(mapping, agent)
-        assert models.Event.objects.count() == 2
-        assert models.Derivation.objects.count() == 2
-        assert models.Derivation.objects.get(source_file_id='e2834eed-4178-469a-9a4e-c8f1490bb804', derived_file_id='071e6af9-f676-40fa-a5ab-754ca6b653e0', event__isnull=False)
+        assert models.Event.objects.count() == 1  # FIXME set to 2 when .RData in METS
+        assert models.Derivation.objects.count() == 1  # FIXME set to 2 when .RData in METS
+        # FIXME Uncomment when .RData in METS
+        # assert models.Derivation.objects.get(source_file_id='e2834eed-4178-469a-9a4e-c8f1490bb804', derived_file_id='071e6af9-f676-40fa-a5ab-754ca6b653e0', event__isnull=False)
         assert models.Derivation.objects.get(source_file_id='e2834eed-4178-469a-9a4e-c8f1490bb804', derived_file_id='5518a927-bae9-497c-8a16-caa072e6ef7e', event__isnull=False)
 
     def test_validate_checksums(self):
