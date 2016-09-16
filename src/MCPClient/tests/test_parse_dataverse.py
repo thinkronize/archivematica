@@ -32,26 +32,26 @@ class TestParseDataverse(TestCase):
         mapping = parse_dataverse.get_db_objects(self.mets, self.uuid)
         assert len(mapping) == 6  # FIXME set to 7 when .RData in METS
         # chelen_052.jpg
-        assert self.mets.get_file('2bd13f12-cd98-450d-8c49-416e9f666a9c') in mapping
+        assert self.mets.get_file(file_uuid='2bd13f12-cd98-450d-8c49-416e9f666a9c') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/chelan_052.jpg') in mapping.values()
         # Weather_data.sav
-        assert self.mets.get_file('fb3b1250-5e45-499f-b0b1-0f6a20d77366') in mapping
+        assert self.mets.get_file(file_uuid='fb3b1250-5e45-499f-b0b1-0f6a20d77366') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.sav') in mapping.values()
         # Weather_data.tab
-        assert self.mets.get_file('e5fde5cb-a5d7-4e67-ae66-20b73552eedf') in mapping
+        assert self.mets.get_file(file_uuid='e5fde5cb-a5d7-4e67-ae66-20b73552eedf') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.tab') in mapping.values()
         # Weather_data.RData
         # FIXME uncomment when .RData in METS
-        # assert self.mets.get_file('a001048d-4c3e-485d-af02-1d19584a93b1') in mapping
+        # assert self.mets.get_file(file_uuid='a001048d-4c3e-485d-af02-1d19584a93b1') in mapping
         # assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data.RData') in mapping.values()
         # ris
-        assert self.mets.get_file('e9e0d762-feff-4b9c-9f70-b408c47149bc') in mapping
+        assert self.mets.get_file(file_uuid='e9e0d762-feff-4b9c-9f70-b408c47149bc') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_datacitation-ris.ris') in mapping.values()
         # ddi
-        assert self.mets.get_file('3dfc2e3f-22e2-4d3e-9913-e4bccc5257ff') in mapping
+        assert self.mets.get_file(file_uuid='3dfc2e3f-22e2-4d3e-9913-e4bccc5257ff') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_data-ddi.xml') in mapping.values()
         # endnote
-        assert self.mets.get_file('d9b4e460-f306-43ce-8ee5-7f969595e4ab') in mapping
+        assert self.mets.get_file(file_uuid='d9b4e460-f306-43ce-8ee5-7f969595e4ab') in mapping
         assert models.File.objects.get(currentlocation='%transferDirectory%objects/Weather_data.zip-2015-11-05T16_06_49.498453/Weather_datacitation-endnote.xml') in mapping.values()
 
     def test_set_filegroups(self):
