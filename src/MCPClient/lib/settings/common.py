@@ -22,6 +22,7 @@ import logging.config
 import os
 
 from appconfig import Config
+import email_settings
 
 
 CONFIG_MAPPING = {
@@ -58,6 +59,8 @@ CONFIG_MAPPING = {
     'db_port': {'section': 'client', 'option': 'port', 'type': 'string'},
 }
 
+CONFIG_MAPPING.update(email_settings.CONFIG_MAPPING)
+
 CONFIG_DEFAULTS = """[MCPClient]
 MCPArchivematicaServer = localhost:4730
 sharedDirectoryMounted = /var/archivematica/sharedDirectory/
@@ -88,6 +91,22 @@ host = localhost
 database = MCP
 port = 3306
 engine = django.db.backends.mysql
+
+[email]
+backend = django.core.mail.backends.console.EmailBackend
+host = smtp.gmail.com
+host_password =
+host_user = your_email@example.com
+port = 587
+ssl_certfile =
+ssl_keyfile =
+use_ssl = False
+use_tls = True
+file_path =
+default_from_email = webmaster@example.com
+subject_prefix = [Archivematica]
+timeout = 300
+#server_email =
 """
 
 config = Config(env_prefix='ARCHIVEMATICA_MCPCLIENT', attrs=CONFIG_MAPPING)
@@ -116,7 +135,8 @@ DATABASES = {
 }
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = config.get('secret_key', default='e7b-$#-3fgu)j1k01)3tp@^e0=yv1hlcc4k-b6*ap^zezv2$48')
+SECRET_KEY = config.get(
+    'secret_key', default='e7b-$#-3fgu)j1k01)3tp@^e0=yv1hlcc4k-b6*ap^zezv2$48')
 
 USE_TZ = True
 TIME_ZONE = 'UTC'
@@ -195,3 +215,6 @@ CLAMAV_CLIENT_TIMEOUT = config.get('clamav_client_timeout')
 CLAMAV_CLIENT_THRESHOLD = config.get('clamav_client_threshold')
 STORAGE_SERVICE_CLIENT_TIMEOUT = config.get('storage_service_client_timeout')
 AGENTARCHIVES_CLIENT_TIMEOUT = config.get('agentarchives_client_timeout')
+
+# Apply email settings
+globals().update(email_settings.get_settings(config))
