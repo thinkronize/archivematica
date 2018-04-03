@@ -147,13 +147,28 @@ def match_dip_objects_to_resource_component_levels(client, request, resource_com
     return render(request, match_template, locals())
 
 
+def remove_objects_prefix(path):
+    if path.startswith('objects/'):
+        return path[8:]
+    return path
+
+
 def review_matches(client, request, template, uuid, matches=[]):
     object_paths = {pair['uuid']: pair['path']
                     for pair in ingest_upload_atk_get_dip_object_paths(uuid)}
+
+    access_paths = {}
+    for orig_uuid in object_paths:
+        for derivation in models.Derivation.objects.filter(
+                source_file_id=orig_uuid,
+                derived_file__filegrpuse='access'):
+            access_paths[derivation.derived_file.uuid] = remove_objects_prefix(
+                derivation.derived_file.currentlocation)
+
     # Augment the match data with the path of the object (normally only
     # fileuuid is included)
     for match in matches:
-        object_path = object_paths[match['file_uuid']]
+        object_path = access_paths[match['file_uuid']]
         match['object_path'] = object_path
 
     return render(request, template, {
@@ -201,8 +216,7 @@ def ingest_upload_atk_get_dip_object_paths(uuid):
             )
 
             # remove "objects/" dir when storing representation
-            if object_path.index('objects/') == 0:
-                object_path = object_path[8:]
+            object_path = remove_objects_prefix(object_path)
 
             paths.append(object_path)
             path_uuids[object_path] = file.uuid
@@ -216,14 +230,3 @@ def ingest_upload_atk_get_dip_object_paths(uuid):
         })
 
     return files
-
-    """
-    files = [{
-        'uuid': '7665dc52-29f3-4309-b3fe-273c4c04df4b',
-        'path': 'dog.jpg'
-    },
-    {
-        'uuid': 'c2e41289-8280-4db9-ae4e-7730fbaa1471',
-        'path': 'inages/candy.jpg'
-    }]
-    """
