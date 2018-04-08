@@ -285,11 +285,11 @@ def create_file(uuid, origin_location, origin_path, current_location,
         else:
             url = _storage_service_url() + 'file/'
             response = session.post(url, json=new_file)
-    except requests.exceptions.RequestException as e:
+        # raise an HTTPError exception if getting HTTP 4xx or 5xx error
+        response.raise_for_status()
+    except (requests.exceptions.RequestException, requests.exceptions.HTTPError) as e:
         LOGGER.warning("Unable to create file from %s because %s", new_file, e)
         return (None, e)
-    # TODO: if the SS returns a 500 error, then the dashboard will not signal
-    # to the user that AIP storage has failed! This is not good.
     LOGGER.info('Status code of create file/package request: %s',
                 response.status_code)
     file_ = response.json()
